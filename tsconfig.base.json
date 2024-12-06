@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@palico-ai/app": ["packages/palico-app/src/index.ts"],
+      "@palico-ai/client-js": ["packages/client-js/src/index.ts"],
+      "@palico-ai/common": ["packages/common/src/index.ts"],
+      "@palico-ai/components": ["packages/components/src/index.ts"],
+      "@palico-ai/react": ["packages/react/src/index.ts"],
+      "palico": ["packages/cli/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

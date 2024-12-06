@@ -1,0 +1,27 @@
+{
+  "name": "palico",
+  "version": "1.22.7",
+  "bugs": {
+    "url": "https://github.com/palico-ai/palico-ai/issues"
+  },
+  "homepage": "https://github.com/palico-ai/palico-ai#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/palico-ai/palico-ai"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0",
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "openai": "^4.28.4"
+  },
+  "bin": {
+    "palico": "src/index.js"
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts"
+}

@@ -1,0 +1,60 @@
+{
+  "name": "@palico-ai/app",
+  "version": "1.22.7",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/palico-ai/palico-ai/issues"
+  },
+  "homepage": "https://github.com/palico-ai/palico-ai#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/palico-ai/palico-ai"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "publish:clean": "npm unpublish --force --registry http://localhost:4873",
+    "publish:local": "npm publish --registry http://localhost:4873",
+    "prisma:pull": "prisma db pull",
+    "postinstall": "[ -f src/assets/postinstall.js ] && node src/assets/postinstall.js || echo 'INFO: Ignoring Post-Install Script.'"
+  },
+  "bin": {
+    "palico-app": "src/cli/index.js"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.8.0",
+    "@opentelemetry/resources": "1.24.0",
+    "@opentelemetry/sdk-node": "^0.51.0",
+    "@opentelemetry/semantic-conventions": "1.24.0",
+    "@palico-ai/common": "1.22.7",
+    "body-parser": "^1.20.3",
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "configstore": "^6.0.0",
+    "cors": "^2.8.5",
+    "docker-compose": "^0.24.8",
+    "dotenv": "^16.4.4",
+    "express": "^4.21.0",
+    "find-up": "^5.0.0",
+    "lodash": "^4.17.21",
+    "pg": "^8.11.3",
+    "pg-boss": "^9.0.3",
+    "pg-hstore": "^2.3.4",
+    "portfinder": "^1.0.32",
+    "sequelize": "^6.37.3",
+    "tslib": "^2.3.0",
+    "zod": "^3.23.8",
+    "@opentelemetry/core": "1.24.0",
+    "@opentelemetry/sdk-trace-base": "1.24.0",
+    "@opentelemetry/sdk-trace-node": "^1.24.0",
+    "exponential-backoff": "^3.1.1",
+    "yaml": "^2.5.1",
+    "fastest-levenshtein": "^1.0.16"
+  },
+  "devDependencies": {
+    "prisma": "^5.15.0",
+    "ts-node": "^10.9.1"
+  }
+}

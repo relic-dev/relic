@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model conversation_request_tracings {
+  requestId             String                 @id @db.VarChar(255)
+  conversationId        String?                @db.VarChar(255)
+  requestInput          Json?
+  responseOutput        Json?
+  appConfig             Json?
+  traceId               String?                @db.VarChar(255)
+  tracePreviewUrl       String?                @db.VarChar(255)
+  createdAt             DateTime               @db.Timestamptz(6)
+  updatedAt             DateTime               @db.Timestamptz(6)
+  conversation_tracings conversation_tracings? @relation(fields: [conversationId], references: [conversationId], onDelete: Cascade)
+  request_logs          request_logs?
+  request_spans         request_spans[]
+}
+
+model conversation_tracings {
+  conversationId                String                          @id @db.VarChar(255)
+  agentName                     String?                         @db.VarChar(255)
+  workflowName                  String?                         @db.VarChar(255)
+  createdAt                     DateTime                        @db.Timestamptz(6)
+  updatedAt                     DateTime                        @db.Timestamptz(6)
+  conversation_request_tracings conversation_request_tracings[]
+  request_spans                 request_spans[]
+}
+
+model simple_chat_histories {
+  conversationId String   @id @db.VarChar(255)
+  messagesJSON   Json?
+  createdAt      DateTime @db.Timestamptz(6)
+  updatedAt      DateTime @db.Timestamptz(6)
+}
+
+model request_spans {
+  spanId                        String                        @id @db.VarChar(255)
+  requestId                     String                        @db.VarChar(255)
+  conversationId                String                        @db.VarChar(255)
+  parentSpanId                  String?                       @db.VarChar(255)
+  name                          String                        @db.VarChar(255)
+  attributes                    Json
+  events                        Json
+  timestamp                     BigInt
+  duration                      Float
+  statusCode                    Int
+  conversation_tracings         conversation_tracings         @relation(fields: [conversationId], references: [conversationId], onDelete: Cascade)
+  conversation_request_tracings conversation_request_tracings @relation(fields: [requestId], references: [requestId], onDelete: Cascade)
+}
+
+model request_logs {
+  requestId                     String                        @id @db.VarChar(255)
+  logs                          Json?
+  conversation_request_tracings conversation_request_tracings @relation(fields: [requestId], references: [requestId], onDelete: Cascade)
+}
+
+model app_script_requests {
+  requestId  String   @id @db.VarChar(255)
+  scriptName String?  @db.VarChar(255)
+  inputJSON  Json?
+  status     String?  @db.VarChar(255)
+  createdAt  DateTime @db.Timestamptz(6)
+  updatedAt  DateTime @db.Timestamptz(6)
+}

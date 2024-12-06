@@ -1,0 +1,73 @@
+{
+  "name": "palico-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/palico-app/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/palico-app",
+        "main": "packages/palico-app/src/index.ts",
+        "tsConfig": "packages/palico-app/tsconfig.lib.json",
+        "assets": [
+          "packages/palico-app/prisma/**/*",
+          "packages/palico-app/src/assets/**/*"
+        ]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs palico-app {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "publish-local": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "cwd": "dist/packages/palico-app",
+        "commands": [
+          "npm unpublish --force --registry http://localhost:4873",
+          "npm publish --registry http://localhost:4873"
+        ],
+        "parallel": false
+      }
+    },
+    "typedoc": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/palico-app",
+        "command": "typedoc --out ../../dist/typedoc/palico-app --tsconfig tsconfig.lib.json src/index.ts"
+      }
+    },
+    "syncdb": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/palico-app",
+        "command": "ts-node scripts/database/sync_db.ts"
+      }
+    },
+    "prisma:apply": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/palico-app",
+        "command": "npx prisma migrate deploy"
+      }
+    },
+    "prisma:pull": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/palico-app",
+        "command": "npx prisma db pull"
+      }
+    },
+    "primsa:save": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/palico-app",
+        "command": "prisma migrate dev --name \"$(date +'%Y%m%d%H%M%S')\""
+      }
+    }
+  },
+  "tags": []
+}

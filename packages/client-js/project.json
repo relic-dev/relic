@@ -1,0 +1,62 @@
+{
+  "name": "client-js",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/client-js/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "main": "packages/client-js/src/index.ts",
+        "outputPath": "dist/packages/client-js",
+        "tsConfig": "packages/client-js/tsconfig.lib.json",
+        "compiler": "tsc",
+        "generateExportsField": true,
+        "project": "packages/client-js/package.json",
+        "format": ["esm", "cjs"],
+        "assets": [
+          {
+            "glob": "packages/client-js/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs client-js {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "publish-local": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "cwd": "dist/packages/client-js",
+        "commands": [
+          "npm unpublish --force --registry http://localhost:4873",
+          "npm publish --registry http://localhost:4873"
+        ],
+        "parallel": false
+      }
+    },
+    "typedoc": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/client-js",
+        "command": "typedoc --out ../../dist/typedoc/client-js --tsconfig tsconfig.lib.json src/index.ts"
+      }
+    }
+  },
+  "tags": []
+}

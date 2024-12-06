@@ -1,0 +1,30 @@
+{
+  "name": "starter-app-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "palico": "palico-app",
+    "start": "palico-app start",
+    "selfhost:init": "npm run palico selfhost init",
+    "selfhost:up": "docker compose -f selfhost/docker-compose.yml up",
+    "selfhost:down": "docker compose -f selfhost/docker-compose.yml down",
+    "selfhost:update": "npm run palico selfhost update-compose",
+    "selfhost:migrate": "npm run palico selfhost migrate-db"
+  },
+  "nodemonConfig": {
+    "ignore": ["appdata/**/*", ".palico"]
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.8.0",
+    "openai": "^4.72.0",
+    "zod-to-json-schema": "^3.23.5"
+  },
+  "devDependencies": {
+    "@types/nodemon": "^1.19.6",
+    "ts-node": "^10.9.1",
+    "nodemon": "^3.1.0"
+  }
+}

@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  # push: # Removing CI cause low on NX credits
+  #   branches:
+  #     - main
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - run: npm install
+
+      - uses: nrwl/nx-set-shas@v4
+
+      # - run: npx nx-cloud record -- nx format:check
+      - run: npx nx affected -t lint
+
+      - run: npx nx affected -t test --passWithNoTests --exclude=palico-ai
+
+      # - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+
+      - run: npx nx affected -t build
+        env:
+          PALICO_AGENT_API_URL: 'http://localhost:8000'
+          PALICO_SERVICE_KEY: 'placeholder'
+
+      - run: npx nx run typedoc
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false

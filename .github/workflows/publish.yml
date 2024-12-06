@@ -1,0 +1,50 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - npm-v*.*.*
+
+jobs:
+  test:
+    name: Publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # needed for provenance data generation
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: npm install
+        shell: bash
+
+      - name: Print Environment Info
+        run: npx nx report
+        shell: bash
+
+      # - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+
+      - name: Build packages
+        run: npx nx run-many -t build -p palico-app -p common -p client-js -p cli -p react
+        shell: bash
+        env:
+          PALICO_AGENT_API_URL: 'http://localhost:8000'
+          PALICO_SERVICE_KEY: 'placeholder'
+
+      - name: Publish packages
+        run: npx nx release publish
+        shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true

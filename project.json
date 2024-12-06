@@ -1,0 +1,44 @@
+{
+  "name": "palico-ai",
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f Dockerfile . -t palico-ai"
+    },
+    "sanity-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx affected -t lint",
+          "npx nx affected -t test  --passWithNoTests --exclude=palico-ai",
+          "npx nx affected -t build",
+          "npx nx run typedoc"
+        ],
+        "parallel": true
+      }
+    },
+    "docs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npx mintlify dev"],
+        "cwd": "apps/docs"
+      }
+    },
+    "typedoc": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "commands": ["npx typedoc"]
+      }
+    },
+    "local-registry": {
+      "executor": "@nx/js:verdaccio",
+      "options": {
+        "port": 4873,
+        "config": ".verdaccio/config.yml",
+        "storage": "tmp/local-registry/storage"
+      }
+    }
+  }
+}
